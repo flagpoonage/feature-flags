@@ -3,10 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
 
-// require('style-loader');
-// require('typings-for-css-modules-loader');
-// require('postcss-loader');
-// require('css-loader');
 require('ts-loader');
 
 const missingConfigMessage = 'You must provide a webpack configuration';

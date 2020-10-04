@@ -1,11 +1,10 @@
 import './index.css';
-import styles from './index.module.css';
-
 import * as React from 'react';
 import { render } from 'react-dom';
+import { Page } from './components/Page';
 
 document.addEventListener('DOMContentLoaded', () => {
   const base = document.createElement('div');
   document.body.prepend(base);
-  render(<div className={styles.valueAdded}>{'Hello'}</div>, base);
+  render(<Page />, base);
 });
