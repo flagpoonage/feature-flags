@@ -1,4 +1,5 @@
 const assert = require('assert');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
 
@@ -7,8 +8,6 @@ const postcssPresetEnv = require('postcss-preset-env');
 // require('postcss-loader');
 // require('css-loader');
 require('ts-loader');
-
-console.log(process.cwd());
 
 const missingConfigMessage = 'You must provide a webpack configuration';
 
@@ -34,8 +33,7 @@ const css = [
   {
     test: /\.css$/i,
     use: [
-      'style-loader',
-      // '@teamsupercell/typings-for-css-modules-loader',
+      MiniCssExtractPlugin.loader,
       {
         loader: 'css-loader',
         options: { modules: { auto: true } },
@@ -71,7 +69,15 @@ function pipe(webpackConfig, handlers) {
   }, webpackConfig);
 }
 
+function configureHtml(webpackConfig) {
+  assertConfig(webpackConfig);
+
+  return configurePlugins(webpackConfig, [new HtmlWebpackPlugin()]);
+}
+
 function configureJs(webpackConfig) {
+  assertConfig(webpackConfig);
+
   return configureResolvedExtensions(webpackConfig, ['.js', '.json']);
 }
 
@@ -82,9 +88,10 @@ function configureUrl(webpackConfig) {
 
 function configureCss(webpackConfig) {
   assertConfig(webpackConfig);
-  console.log('Configuring CSS...');
-  return configureResolvedExtensions(configureModuleRules(webpackConfig, css), [
-    '.css',
+  return pipe(webpackConfig, [
+    (cfg) => configurePlugins(cfg, [new MiniCssExtractPlugin()]),
+    (cfg) => configureModuleRules(cfg, css),
+    (cfg) => configureResolvedExtensions(cfg, ['.css']),
   ]);
 }
 
@@ -98,7 +105,19 @@ function configureTypescript(webpackConfig, extensions) {
   );
 }
 
+function configurePlugins(webpackConfig, plugins) {
+  assertConfig(webpackConfig);
+
+  webpackConfig.plugins = Array.isArray(webpackConfig.plugins)
+    ? [...webpackConfig.plugins, ...plugins]
+    : plugins;
+
+  return webpackConfig;
+}
+
 function configureModuleRules(webpackConfig, newRules) {
+  assertConfig(webpackConfig);
+
   const currentRules = webpackConfig.module && webpackConfig.module.rules;
 
   if (!Array.isArray(currentRules)) {
@@ -136,12 +155,17 @@ function configureResolvedExtensions(webpackConfig, extensions) {
 }
 
 exports.configureAll = function configureAll(webpackConfig) {
-  return pipe(webpackConfig, [
+  const output = pipe(webpackConfig, [
+    configureHtml,
     configureUrl,
     configureCss,
     configureJs,
     (config) => configureTypescript(config, ['.ts', '.tsx']),
   ]);
+
+  console.log(output.plugins);
+
+  return output;
 };
 
 exports.configureResolvedExtensions = configureResolvedExtensions;
