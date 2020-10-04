@@ -1,0 +1,19 @@
+{
+  "name": "strategies",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "James Hay <jameshay@connectedfreight.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/strategies.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
