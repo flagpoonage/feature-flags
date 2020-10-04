@@ -16,10 +16,10 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "build": "tsc",
-    "build-dev": "tsc --watch",
+    "build-dev": "tsc --watch --preserveWatchOutput",
     "start": "node ./dist/index",
     "start-dev": "nodemon ./dist/index",
-    "dev": "yarn build-dev && yarn start-dev"
+    "dev": "yarn build-dev & yarn start-dev"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",

@@ -1,9 +1,12 @@
-const build = require('react-build');
+const path = require('path');
+const { configureAll } = require('react-build');
 
-const { moduleRules } = build;
-
-module.exports = {
-  module: {
-    rules: [...moduleRules.typescript, ...moduleRules.css, ...moduleRules.url],
+module.exports = configureAll({
+  entry: {
+    main: './src/index.tsx',
   },
-};
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+});
